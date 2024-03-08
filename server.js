@@ -9,10 +9,10 @@ const app = express();
 app.use(express.json());
 
 // Connecting to MongoDB
-mongoose.connect('mongodb://localhost/social-network-api', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost/social-network-api')
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Could not connect to MongoDB...', err));
+
 
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');
