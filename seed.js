@@ -1,29 +1,29 @@
 const mongoose = require('mongoose');
 const User = require('./models/User'); 
+const Thought = require('./models/Thought'); 
 const db = require('./config/connection'); 
-const Thought = require('./models/Thought');
 
-
+// Seed data for Users
 const seedUsers = [
-    { username: 'beyonce_knowles', email: 'beyonce@queenb.com' },
-    { username: 'chris_evans', email: 'chris@captainamerica.com' },
-    { username: 'emma_watson', email: 'emma@hogwarts.com' },
-    { username: 'leonardo_dicaprio', email: 'leo@titanic.com' },
+    { username: 'paul_mescal', email: 'paulm@ireland.com' },
+    { username: 'timothee_chalamet', email: 'timmytim@ny.com' },
+    { username: 'jacobelordi', email: 'jacobe@aussie.com' },
     { username: 'taylor_swift', email: 'taylor@swiftie.com' },
-    { username: 'brad_pitt', email: 'brad@hollywood.com' },
-    { username: 'angelina_jolie', email: 'angelina@movies.com' },
-    { username: 'johnny_depp', email: 'johnny@pirates.com' },
-    { username: 'scarlett_johansson', email: 'scarlett@natasha.com' },
-    { username: 'ryan_reynolds', email: 'ryan@deadpool.com' }
+    { username: 'zendaya_coleman', email: 'zendaya@shakeup.com' }
 ];
+
+// Seed data for Thoughts
 const seedThoughts = [
-    { thoughtText: 'What a beautiful day!', username: 'beyonce_knowles' },
-    { thoughtText: 'Excited about the new movie!', username: 'chris_evans' },
-
+    { thoughtText: 'What a beautiful day!', username: 'paul_mescal' },
+    { thoughtText: 'Excited about the new movie!', username: 'timothee_chalamet' },
+    { thoughtText: 'I love my dog!', username: 'jacobelordi' },
+    { thoughtText: 'I love my cat!', username: 'taylor_swift' },
+    { thoughtText: 'I love my bf!', username: 'zendaya_coleman' }
 ];
 
+// Async function to clear old data and insert new seed data
 async function seedDB() {
-    await mongoose.connect('mongodb://localhost/social-network-api');
+    await mongoose.connect('mongodb://localhost/social-network-api', { useNewUrlParser: true, useUnifiedTopology: true });
     console.log("MongoDB connected!");
 
     // Remove old data
@@ -32,11 +32,10 @@ async function seedDB() {
     await Thought.deleteMany({});
     console.log("Old thoughts removed");
 
-    // Insert new seed data
+    // Insert new users and thoughts with corresponding user IDs
     const createdUsers = await User.insertMany(seedUsers);
     console.log("New users added");
 
-    // When inserting thoughts, you might want to associate them with user IDs
     const userMap = createdUsers.reduce((map, user) => {
         map[user.username] = user._id;
         return map;
@@ -44,19 +43,20 @@ async function seedDB() {
 
     const mappedThoughts = seedThoughts.map(thought => ({
         ...thought,
-        userId: userMap[thought.username]
+        userId: userMap[thought.username] 
     }));
 
     await Thought.insertMany(mappedThoughts);
     console.log("New thoughts added");
 
-    // Optional: Create friendships (This is just a basic example. Adjust as needed.)
+    //Creating sample friendships between users
     if (createdUsers.length > 1) {
         await User.findByIdAndUpdate(createdUsers[0]._id, { $addToSet: { friends: createdUsers[1]._id } });
         await User.findByIdAndUpdate(createdUsers[1]._id, { $addToSet: { friends: createdUsers[0]._id } });
         console.log("Sample friendships created");
     }
 
+    // Close the MongoDB connection
     mongoose.connection.close();
     console.log("MongoDB disconnected");
 }

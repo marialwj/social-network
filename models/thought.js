@@ -15,15 +15,14 @@ const ReactionSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        // Getter method to format the timestamp
         get: timestamp => timestamp.toLocaleString()
     }
 }, {
     toJSON: {
         getters: true,
-        virtuals: true // If you decide to use virtuals
+        virtuals: true 
     },
-    id: false // since it's a subdocument, it typically doesn't need its own id
+    id: false 
 });
 
 // Thought schema
