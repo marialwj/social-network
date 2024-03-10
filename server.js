@@ -20,7 +20,7 @@ mongoose.connection.once('open', () => {
 });
 
 app.use('/api/users', userRoutes);
-app.use('/api/thoughts', thoughtRoutes);
+app.use('/api/thought', thoughtRoutes);
 app.use('/api/friends', friendsRoutes);
 
 // Start the server

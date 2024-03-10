@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('./models/User'); 
+const User = require('./models/user');
 const Thought = require('./models/Thought'); 
 const db = require('./config/connection'); 
 
@@ -32,7 +32,7 @@ async function seedDB() {
     await Thought.deleteMany({});
     console.log("Old thoughts removed");
 
-    // Insert new users and thoughts with corresponding user IDs
+    // Insert new users and associate thoughts with corresponding user IDs
     const createdUsers = await User.insertMany(seedUsers);
     console.log("New users added");
 
@@ -43,13 +43,13 @@ async function seedDB() {
 
     const mappedThoughts = seedThoughts.map(thought => ({
         ...thought,
-        userId: userMap[thought.username] 
+        userId: userMap[thought.username] // Link thought to user ID
     }));
 
     await Thought.insertMany(mappedThoughts);
     console.log("New thoughts added");
 
-    //Creating sample friendships between users
+    // Optional: Creating sample friendships between users
     if (createdUsers.length > 1) {
         await User.findByIdAndUpdate(createdUsers[0]._id, { $addToSet: { friends: createdUsers[1]._id } });
         await User.findByIdAndUpdate(createdUsers[1]._id, { $addToSet: { friends: createdUsers[0]._id } });
@@ -61,4 +61,5 @@ async function seedDB() {
     console.log("MongoDB disconnected");
 }
 
+// Execute the seed function and catch any errors
 seedDB().catch(err => console.log(err));

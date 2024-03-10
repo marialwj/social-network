@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user');
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
@@ -59,40 +59,40 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-// Function to add a friend
 exports.addFriend = async (req, res) => {
+    // Logic to add a friend
     try {
         const user = await User.findByIdAndUpdate(
             req.params.userId,
-            { $addToSet: { friends: req.params.friendId } }, // Avoid duplicate friends
-            { new: true, upsert: true }
-        ).populate('friends'); // Adjust based on your needs
+            { $addToSet: { friends: req.params.friendId }},
+            { new: true, runValidators: true }
+        ).populate('friends');
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'No user found with this id!' });
         }
 
-        res.status(200).json(user);
+        res.json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: 'Error adding friend', error: error });
     }
 };
 
-// Function to remove a friend
 exports.removeFriend = async (req, res) => {
+    // Logic to remove a friend
     try {
         const user = await User.findByIdAndUpdate(
             req.params.userId,
-            { $pull: { friends: req.params.friendId } },
+            { $pull: { friends: req.params.friendId }},
             { new: true }
-        ).populate('friends'); // Adjust based on your needs
+        ).populate('friends');
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'No user found with this id!' });
         }
 
-        res.status(200).json(user);
+        res.json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: 'Error removing friend', error: error });
     }
 };
