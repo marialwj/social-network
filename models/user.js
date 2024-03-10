@@ -4,7 +4,7 @@ const UserSchema = new Schema({
     username: {type: String, required: true, unique: true, trim: true},
     email: {type: String, required: true, unique: true, trim: true},
     thoughts: [{type: Schema.Types.ObjectId, ref: 'Thought'}],
-    friends: [{type: Schema.Types.ObjectId, ref: 'User'}]
+    friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

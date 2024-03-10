@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes'); // Adjust the path as needed
-const thoughtRoutes = require('./routes/thoughtRoutes'); // Adjust the path as needed
+const userRoutes = require('./routes/userRoutes'); 
+const thoughtRoutes = require('./routes/thoughtRoutes'); 
+const friendsRoutes = require('./routes/friendRoutes');
 
 const PORT = 3001;
 const app = express();
@@ -18,9 +19,9 @@ mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');
 });
 
-// Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/thoughts', thoughtRoutes);
+app.use('/api/friends', friendsRoutes);
 
 // Start the server
 app.listen(PORT, () => {
