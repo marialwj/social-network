@@ -1,4 +1,4 @@
-const User = require('../models/User'); 
+const User = require('../models/user'); 
 
 exports.addFriend = async (req, res) => {
     try {
@@ -25,7 +25,7 @@ exports.removeFriend = async (req, res) => {
             req.params.userId,
             { $pull: { friends: req.params.friendId } }, 
             { new: true }
-        ).populate('friends'); 
+        ).populate('friends');
 
         if (!user) {
             return res.status(404).send('User not found.');
