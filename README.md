@@ -34,7 +34,8 @@ node server.js
 4. Mongoose
 
 ## Video Walkthrough
-
+Here is the video displaying all of its capabilities on Insomnia based on the code I created
+[![Walkthrough](walkthrough/socialnetworkwalkthrough.mp4)]
 
 ## License 
 N/A
